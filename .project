@@ -30,4 +30,16 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>res/drawable-hdpi/sad.png</name>
+			<type>1</type>
+			<location>/home/barnex/Desktop/scrots/sad.png</location>
+		</link>
+		<link>
+			<name>res/drawable-hdpi/trool.png</name>
+			<type>1</type>
+			<location>/home/barnex/Desktop/Trool.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>

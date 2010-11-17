@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello, Android! I am a string resource!</string>
     <string name="app_name">Hello, Android</string>
     <string name="play">Playing :)</string>
     <string name="pause">Not playing :(</string>
-<color name="red">#FF0000</color>
-<color name="green">#00FF00</color>
+    <string name="not_connected">Not connected</string>
+    <string name="connected">Connected to: </string>
+    <string name="connect">Connect to server!</string>
+    <string name="next">&gt;</string>
+     <string name="prev">&lt;</string>
+
 </resources>
