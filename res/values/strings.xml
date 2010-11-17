@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hello, Android</string>
+    <string name="app_name">Dromote</string>
     <string name="play">Playing :)</string>
     <string name="pause">Not playing :(</string>
     <string name="not_connected">Not connected</string>
@@ -8,5 +8,4 @@
     <string name="connect">Connect to server!</string>
     <string name="next">&gt;</string>
      <string name="prev">&lt;</string>
-
 </resources>
