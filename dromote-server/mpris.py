@@ -3,7 +3,6 @@ import re
 
 class DbusPlayerList:
   def __init__(self, bus):
-    bus = dbus.SessionBus()
     self.players = []
     m = re.compile("org\\.mpris\\.MediaPlayer2\\.(.+)")
     for name in bus.list_names():
@@ -28,13 +27,10 @@ class MPRIS2Player():
   def prev(self):
 		self.player.Previous()
 
-  def __rshift__(self, seconds):
+  def seek(self, seconds):
 		t = int(seconds * 1000000)
 		self.player.Seek(t)
 	
-  def __lshift__(self, seconds):
-		self.__add__(-seconds)
-
   def __setitem__(self, key, value):
 		self.properties.Set('org.mpris.MediaPlayer2.Player',key,value)
 		return self[key]
@@ -56,7 +52,7 @@ class MPRIS2Player():
   def toggle_shuffle(self):
 		self["Shuffle"] = not self["Shuffle"]
 
-  def toggle_loop(self):
+  def toggle_repeat(self):
 		if self["LoopStatus"] == "Playlist":
 			self["LoopStatus"] = "None"
 		else:
@@ -65,6 +61,12 @@ class MPRIS2Player():
   def volume(self, new_volume=None):
 		self["Volume"] = new_volume or self["Volume"]
 		return self["Volume"]
+
+  def louder(self):
+    self["Volume"] += 0.1
+
+  def quieter(self):
+    self["Volume"] -= 0.1
 
   def __str__(self):
 		title = self.song_title()

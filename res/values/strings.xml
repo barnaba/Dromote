@@ -8,4 +8,8 @@
     <string name="connect">Connect to server!</string>
     <string name="next">&gt;</string>
      <string name="prev">&lt;</string>
+     <string name="shuffle">shuffle</string>
+     <string name="repeat">repeat</string>
+     <string name="vol_up">Vol+</string>
+     <string name="vol_down">Vol-</string>
 </resources>

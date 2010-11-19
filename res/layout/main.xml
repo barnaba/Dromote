@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:gravity="center">
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:gravity="center">
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/connection_view" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:gravity="center"
-		android:textSize="12pt" android:text="@string/not_connected" />
+		android:textSize="10pt" android:text="@string/not_connected" />
 	<EditText android:id="@+id/host_address" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 	<Button android:id="@+id/connect_button" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/connect" />
-	<Button android:id="@+id/cycle_button" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="cycle player" />
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_height="wrap_content" android:text="@string/connect"
+		android:onClick="connect" />
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:orientation="horizontal" android:gravity="center">
-		<Button android:id="@+id/prev_button" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="@string/prev"
-			android:layout_marginTop="100px" />
-		<Button android:id="@+id/action_button" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="play/pause"
-			android:layout_marginTop="100px" />
-		<Button android:id="@+id/next_button" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="@string/next"
-			android:layout_marginTop="100px" />
-	</LinearLayout>
+		android:gravity="center" android:stretchColumns="1">
+		<View android:layout_height="3dip" android:background="#FF909090" />
+		<TableRow>
+			<Button android:id="@+id/prev_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/prev"
+				android:onClick="prev" />
+			<Button android:id="@+id/action_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="play/pause"
+				android:onClick="playPause" />
+			<Button android:id="@+id/next_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/next"
+				android:onClick="next" />
+		</TableRow>
+		<TableRow>
+			<Button android:id="@+id/shuffle_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/shuffle"
+				android:onClick="toggleShuffle" />
+
+			<Button android:id="@+id/repeat_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/repeat"
+				android:onClick="toggleRepeat" android:layout_column="2" />
+			<View android:layout_height="3dip" android:background="#FF909090" />
+		</TableRow>
+		<TableRow>
+			<Button android:id="@+id/vol_down" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/vol_down"
+				android:onClick="volDown" />
+			<Button android:id="@+id/cycle_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="cycle player"
+				android:onClick="cycle" />
+			<Button android:id="@+id/vol_up" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/vol_up"
+				android:onClick="volUp" />
+
+		</TableRow>
+		<View android:layout_height="3dip" android:background="#FF909090" />
+	</TableLayout>
 </LinearLayout>
-  
