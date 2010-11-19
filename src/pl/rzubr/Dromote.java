@@ -17,76 +17,111 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class Dromote extends Activity {
-	/** Called when the activity is first created. */
 
-	private TextView connectionStatus;
-	private PrintWriter hostWriter;
-	private EditText hostInput;
+	private MPRISSocket player = new MPRISSocket();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		this.connectionStatus = (TextView) this
-				.findViewById(R.id.connection_view);
-		this.hostInput = (EditText) this.findViewById(R.id.host_address);
 	}
-
+	
+	public void onDestroy() {
+		player.disconnect();
+	}
 
 	public void next(final View v) {
-		sendMsg("next");
+		this.player.sendCommand("next");
 	}
-	
+
 	public void prev(final View v) {
-		sendMsg("prev");
+		this.player.sendCommand("prev");
 	}
-	
+
 	public void playPause(final View v) {
-		sendMsg("play_pause");
+		this.player.sendCommand("play_pause");
 	}
 
 	public void cycle(final View v) {
-		sendMsg("cycle");
-	}
-	
-	public void toggleShuffle(final View v){
-		sendMsg("toggle_shuffle");
-	}
-	
-	public void toggleRepeat(final View v){
-		sendMsg("toggle_repeat");
-	}
-	
-	public void volUp(final View v){
-		sendMsg("louder");
-	}
-	
-	public void volDown(final View v){
-		sendMsg("quieter");
-	}
-	
-	public void connect(final View v) {
-		try {
-			this.hostWriter = connectToHost(this.hostInput
-					.getEditableText().toString());
-			this.connectionStatus.setText(this
-					.getString(R.string.connected)
-					+ this.hostInput.getEditableText().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void sendMsg(String msg) {
-		this.hostWriter.println(msg);
+		this.player.sendCommand("cycle");
 	}
 
-	public PrintWriter connectToHost(String host) throws UnknownHostException,
-			IOException {
-		Socket s = new Socket(host, 9006);
-		return new PrintWriter(s.getOutputStream(), true);
+	public void toggleShuffle(final View v) {
+		this.player.sendCommand("toggle_shuffle");
+	}
+
+	public void toggleRepeat(final View v) {
+		this.player.sendCommand("toggle_repeat");
+	}
+
+	public void volUp(final View v) {
+		this.player.sendCommand("louder");
+	}
+
+	public void volDown(final View v) {
+		this.player.sendCommand("quieter");
+	}
+
+	public void connect(final View v) {
+		EditText hostInput = (EditText) this.findViewById(R.id.host_address);
+		String hostAddress = hostInput.getEditableText().toString();
+		player.connect(hostAddress);
+		updateConnInfo(player.isConnected(), hostAddress);
+	}
+
+	private void updateConnInfo(boolean connected, String hostAddress) {
+		TextView connectionStatus = (TextView) this
+		.findViewById(R.id.connection_view);
+		if (connected) {
+			connectionStatus.setText(this.getString(R.string.connected)
+					+ hostAddress);
+		} else {
+			connectionStatus.setText(this.getString(R.string.conn_error)
+					+ hostAddress);
+		}
+	}
+
+	private class MPRISSocket {
+		private Socket serverConnection;
+		private PrintWriter cmdWriter;
+		private boolean connected = false;
+
+		public boolean connect(String host) {
+			if (isConnected())
+				disconnect();
+			try {
+				serverConnection = new Socket(host, 9006);
+				cmdWriter = new PrintWriter(
+						this.serverConnection.getOutputStream(), true);
+				connected = true;
+			} catch (UnknownHostException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
+			return true;
+		}
+
+		public void disconnect() {
+			try {
+				sendCommand("bye");
+				serverConnection.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				connected = false;
+			}
+		}
+
+		public boolean isConnected() {
+			return connected;
+		}
+
+		public void sendCommand(String cmd) {
+			if (connected) {
+				cmdWriter.println(cmd);
+			}
+		}
 	}
 
 }

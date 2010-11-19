@@ -3,8 +3,9 @@
     <string name="app_name">Dromote</string>
     <string name="play">Playing :)</string>
     <string name="pause">Not playing :(</string>
-    <string name="not_connected">Not connected</string>
-    <string name="connected">Connected to: </string>
+    <string name="not_connected">Not connected\n</string>
+    <string name="conn_error">Cannot connect to: \n</string>
+    <string name="connected">Connected to: \n</string>
     <string name="connect">Connect to server!</string>
     <string name="next">&gt;</string>
      <string name="prev">&lt;</string>
