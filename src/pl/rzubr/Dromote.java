@@ -1,24 +1,17 @@
 package pl.rzubr;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-import org.apache.http.impl.conn.tsccm.WaitingThread;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Editable;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class Dromote extends Activity {
+	
+	private static final String TAG = "Dromote";
 
-	private MPRISSocket player = new MPRISSocket();
+	private MPRISSocket player = new MPRISSocket(9006);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,8 +19,16 @@ public class Dromote extends Activity {
 		setContentView(R.layout.main);
 	}
 	
-	public void onDestroy() {
+	@Override
+	public void onStop() {
+		super.onStop();
 		player.disconnect();
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		player.reconnect();
 	}
 
 	public void next(final View v) {
@@ -78,49 +79,6 @@ public class Dromote extends Activity {
 		} else {
 			connectionStatus.setText(this.getString(R.string.conn_error)
 					+ hostAddress);
-		}
-	}
-
-	private class MPRISSocket {
-		private Socket serverConnection;
-		private PrintWriter cmdWriter;
-		private boolean connected = false;
-
-		public boolean connect(String host) {
-			if (isConnected())
-				disconnect();
-			try {
-				serverConnection = new Socket(host, 9006);
-				cmdWriter = new PrintWriter(
-						this.serverConnection.getOutputStream(), true);
-				connected = true;
-			} catch (UnknownHostException e) {
-				return false;
-			} catch (IOException e) {
-				return false;
-			}
-			return true;
-		}
-
-		public void disconnect() {
-			try {
-				sendCommand("bye");
-				serverConnection.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				connected = false;
-			}
-		}
-
-		public boolean isConnected() {
-			return connected;
-		}
-
-		public void sendCommand(String cmd) {
-			if (connected) {
-				cmdWriter.println(cmd);
-			}
 		}
 	}
 
