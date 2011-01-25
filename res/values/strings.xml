@@ -13,4 +13,5 @@
      <string name="repeat">repeat</string>
      <string name="vol_up">Vol+</string>
      <string name="vol_down">Vol-</string>
+     <string name="player_prompt">Choose player</string>
 </resources>

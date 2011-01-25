@@ -14,9 +14,10 @@ class DbusPlayerList:
 class MPRIS2Player():
 
   def __init__(self, bus, player_name):
-		player_object = bus.get_object('org.mpris.MediaPlayer2.'+player_name, '/org/mpris/MediaPlayer2')
-		self.player = dbus.Interface(player_object, 'org.mpris.MediaPlayer2.Player')
-		self.properties = dbus.Interface(self.player, 'org.freedesktop.DBus.Properties')
+    player_object = bus.get_object('org.mpris.MediaPlayer2.'+player_name, '/org/mpris/MediaPlayer2')
+    self.player = dbus.Interface(player_object, 'org.mpris.MediaPlayer2.Player')
+    self.properties = dbus.Interface(self.player, 'org.freedesktop.DBus.Properties')
+    self.name = player_name
 
   def next(self):
 		self.player.Next()
@@ -46,8 +47,18 @@ class MPRIS2Player():
 		return meta["mpris:length"]
 
   def song_title(self):
-		meta = self["Metadata"]
-		return meta["xesam:title"]
+    try:
+      meta = self["Metadata"]
+      return meta["xesam:title"].encode('utf-8')
+    except KeyError:
+      return None
+
+  def song_artist(self):
+    try:
+      meta = self["Metadata"]  
+      return meta["xesam:artist"][0].encode('utf-8')
+    except KeyError:
+      return None
 
   def toggle_shuffle(self):
 		self["Shuffle"] = not self["Shuffle"]
