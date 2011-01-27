@@ -16,7 +16,8 @@
 			android:text="Disconnect" android:enabled="false" android:onClick="disconnect" />
 	</LinearLayout>
 	<Spinner android:id="@+id/spinner" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:prompt="@string/player_prompt" android:visibility="invisible"/>
+		android:layout_height="wrap_content" android:prompt="@string/player_prompt"
+		android:visibility="invisible" />
 
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/now_playing" android:layout_width="wrap_content"
@@ -29,21 +30,24 @@
 		<TableRow>
 			<Button android:id="@+id/prev_button" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="@string/prev"
-				android:onClick="prev" />
+				android:onClick="prev" android:width="80px" />
 			<Button android:id="@+id/action_button" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="play/pause"
 				android:onClick="playPause" />
 			<Button android:id="@+id/next_button" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="@string/next"
-				android:onClick="next" />
+				android:onClick="next" android:width="80px" />
 		</TableRow>
 		<TableRow>
 
+			<Button android:id="@+id/vol_down" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/vol_down"
+				android:onClick="volDown" />
+			<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/vol_status" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:gravity="center"
+				android:textSize="8pt" android:text="" />
 
-
-			<Button android:id="@+id/repeat_button" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/repeat"
-				android:onClick="toggleRepeat" />
 
 			<Button android:id="@+id/vol_up" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="@string/vol_up"
@@ -57,10 +61,10 @@
 				android:onClick="toggleShuffle" />
 
 
+			<Button android:id="@+id/repeat_button" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/repeat"
+				android:onClick="toggleRepeat" android:layout_column="2" />
 
-			<Button android:id="@+id/vol_down" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="@string/vol_down"
-				android:onClick="volDown" android:layout_column="2" />
 
 		</TableRow>
 		<View android:layout_height="3dip" android:background="#FF909090" />

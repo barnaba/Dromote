@@ -14,18 +14,19 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int action_button=0x7f050006;
-        public static final int connect_button=0x7f050001;
-        public static final int disconnect_button=0x7f050002;
-        public static final int host_address=0x7f050000;
-        public static final int next_button=0x7f050007;
-        public static final int now_playing=0x7f050004;
-        public static final int prev_button=0x7f050005;
-        public static final int repeat_button=0x7f050008;
-        public static final int shuffle_button=0x7f05000a;
-        public static final int spinner=0x7f050003;
-        public static final int vol_down=0x7f05000b;
-        public static final int vol_up=0x7f050009;
+        public static final int action_button=0x7f060006;
+        public static final int connect_button=0x7f060001;
+        public static final int disconnect_button=0x7f060002;
+        public static final int host_address=0x7f060000;
+        public static final int next_button=0x7f060007;
+        public static final int now_playing=0x7f060004;
+        public static final int prev_button=0x7f060005;
+        public static final int repeat_button=0x7f06000c;
+        public static final int shuffle_button=0x7f06000b;
+        public static final int spinner=0x7f060003;
+        public static final int vol_down=0x7f060008;
+        public static final int vol_status=0x7f060009;
+        public static final int vol_up=0x7f06000a;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -39,11 +40,17 @@ public final class R {
         public static final int not_connected=0x7f040003;
         public static final int pause=0x7f040002;
         public static final int play=0x7f040001;
-        public static final int player_prompt=0x7f04000d;
+        public static final int player_prompt=0x7f04000f;
         public static final int prev=0x7f040008;
-        public static final int repeat=0x7f04000a;
+        public static final int repeat=0x7f04000b;
+        public static final int repeatActive=0x7f04000c;
         public static final int shuffle=0x7f040009;
-        public static final int vol_down=0x7f04000c;
-        public static final int vol_up=0x7f04000b;
+        public static final int shuffleActive=0x7f04000a;
+        public static final int vol_down=0x7f04000e;
+        public static final int vol_up=0x7f04000d;
+    }
+    public static final class style {
+        public static final int bold=0x7f050000;
+        public static final int normal=0x7f050001;
     }
 }

@@ -5,7 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.R.bool;
+import android.R.string;
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,22 +29,54 @@ public class Dromote extends Activity {
 	private MPRISSocket player = new MPRISSocket(9006);
 	private volatile Thread checker;
 	private TextView status;
+	private TextView volstatus;
+	private Button shuffleButton;
+	private Button repeatButton;
+	
 	private String nowPlaying = "";
+	private String[] playerStatus = new String[]{"STATUS", "-1", "-1", "-1"}; 
 	private String[] playerList = new String[0];
 
+
 	private final Runnable mUpdateNowPlaying = new Runnable() {
+		
 		public void run() {
 			status.setText(nowPlaying);
+		}
+	};
+	
+	private final Runnable mUpdateStatus = new Runnable() {
+		
+		public void run() {
+			String volume = playerStatus[1];
+			if (volume.equals("-1")){
+				volstatus.setText("");
+			} else {
+				volstatus.setText(playerStatus[1] + "%");
+			}
+			setButtonState(shuffleButton, playerStatus[3], "shuffle");
+			setButtonState(repeatButton, playerStatus[2], "repeat");
+		}
+		
+		private void setButtonState(Button b, String s, String res){
+			if (s.equals("1")){
+				b.setTypeface(null, Typeface.BOLD);
+			} else {
+				b.setTypeface(null, Typeface.NORMAL);
+			}
 		}
 	};
 
 	private final Runnable mBye = new Runnable() {
 		public void run() {
-			;
 			player.disconnect();
 			updateConnInfo(player.isConnected(), "");
 			nowPlaying = "";
-			status.setText(nowPlaying);
+			playerStatus = new String[]{"STATUS", "-1", "-1", "-1"};
+			mUpdateNowPlaying.run();
+			mUpdateStatus.run();
+			Spinner spinner = (Spinner) findViewById(R.id.spinner);
+			spinner.setVisibility(View.INVISIBLE);
 		}
 	};
 
@@ -69,6 +103,7 @@ public class Dromote extends Activity {
 			while (true) {
 				while (player.isConnected() && !player.bye) {
 					String data = player.getData();
+					if (data == null) continue;
 					if (players) {
 						players = false;
 						playerList = data.split(" ");
@@ -79,6 +114,9 @@ public class Dromote extends Activity {
 							mHandler.post(mBye);
 						} else if (data.equals("PLAYERS")) {
 							players = true;
+						} else if (data.startsWith("STATUS")) {
+							playerStatus = data.split(" ",4);
+							mHandler.post(mUpdateStatus);
 						} else {
 							nowPlaying = data;
 							mHandler.post(mUpdateNowPlaying);
@@ -123,7 +161,9 @@ public class Dromote extends Activity {
 		status = (TextView) this.findViewById(R.id.now_playing);
 		checker = new Thread(socketChecker);
 		checker.start();
-
+		volstatus = (TextView) this.findViewById(R.id.vol_status);
+		shuffleButton = (Button) this.findViewById(R.id.shuffle_button);
+		repeatButton = (Button) this.findViewById(R.id.repeat_button);
 	}
 
 	@Override

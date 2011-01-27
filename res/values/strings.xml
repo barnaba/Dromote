@@ -10,7 +10,9 @@
     <string name="next">&gt;</string>
      <string name="prev">&lt;</string>
      <string name="shuffle">shuffle</string>
+     <string name="shuffleActive"><b>shuffle</b></string>
      <string name="repeat">repeat</string>
+     <string name="repeatActive"><b>repeat</b></string>
      <string name="vol_up">Vol+</string>
      <string name="vol_down">Vol-</string>
      <string name="player_prompt">Choose player</string>

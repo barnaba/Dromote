@@ -6,6 +6,7 @@ import gobject
 import time
 from mpris import *
 from dbus.mainloop.glib import DBusGMainLoop
+from synchronous_recipe import synchronous
 
 
 def signal_handler(signal, frame):
@@ -16,20 +17,24 @@ signal.signal(signal.SIGINT, signal_handler)
 
 
 def handle_signal(interface_name, changed_properties, invalidated):
-  update_now_playing()
+  main.something_changed = True
 
 def update_now_playing():
-  player = update_now_playing.player
-  client = update_now_playing.client
-  if not (client is None):
+  if not (update_now_playing.player is None or update_now_playing.client is None):
+    player = update_now_playing.player
+    client = update_now_playing.client
+    msg = " ".join(('STATUS', str(int(player.volume()*100)), str(player.repeat_status()), str(player.shuffle_status())))
+    client.send(msg + "\n")
     if player.song_title() is None:
-      client.send("-")
+      client.send("-\n")
     else:
-      client.send('"' + player.song_title() + '" by ' + player.song_artist() + "\n")
+      msg = '"' + player.song_title() + '" by ' + player.song_artist() + "\n"
+      client.send(msg)
 
 def main():  
-
-  gobject.threads_init()
+  main.something_changed = False
+  update_now_playing
+  #gobject.threads_init()
   DBusGMainLoop(set_as_default=True)
   context = gobject.MainLoop().get_context()
 
@@ -52,7 +57,7 @@ def main():
       (clientsocket, address) = serversocket.accept()
       update_now_playing.client = clientsocket
       print "client connected: " , address
-      l = DbusPlayerList(d)
+      l = DbusPlayerList(d, lock)
       if len(l.players) < 1:
         print repr(l.players)
         print "no mpris compliant players found :<"
@@ -61,7 +66,7 @@ def main():
         update_now_playing.client = None
         time.sleep(1)
         continue
-      player = MPRIS2Player(d, l.players[i])
+      player = MPRIS2Player(d, l.players[i], lock)
       update_now_playing.player = player
       update_now_playing()
 
@@ -69,15 +74,12 @@ def main():
       print "available players: " + " ".join(l.players)
       print "connected player : " + str(l.players[i])
 
-      lock.acquire()
       while clientsocket: 
-          lock.release() 
           msg = clientsocket.recv(128).rstrip()
-          lock.acquire()
           m = re.search("cycle (\d)",msg) 
           if m:
             i = int(m.group(1))
-            player = MPRIS2Player(d, l.players[i])
+            player = MPRIS2Player(d, l.players[i], lock)
             update_now_playing.player = player
             update_now_playing()
             print "connected player: " + str(l.players[i])
@@ -90,7 +92,6 @@ def main():
               fun()
               print "command: " + msg
       print "client disconnected"
-      lock.release()
   except KeyboardInterrupt:
     clientsocket.close()
     serversocket.close()
@@ -99,7 +100,10 @@ def loopContext(context, lock):
   while 1:
     with lock:
       context.iteration(False)
-    time.sleep(0.001)
+    if main.something_changed:
+      update_now_playing()
+      main.something_changed = False
+    time.sleep(0.1)
 
 
 if __name__ == "__main__":

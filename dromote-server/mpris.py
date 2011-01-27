@@ -1,23 +1,36 @@
 import dbus
 import re
+from synchronous_recipe import synchronous
 
-class DbusPlayerList:
-  def __init__(self, bus):
+class DbusPlayerList(object):
+  def __init__(self, bus, lock):
+    self.lock = lock
+    self.bus = bus
+    self.initialize()
+
+  @synchronous('lock')
+
+  def initialize(self):
     self.players = []
     m = re.compile("org\\.mpris\\.MediaPlayer2\\.(.+)")
-    for name in bus.list_names():
+    for name in self.bus.list_names():
       player = m.match(name)
       if player:
         self.players.append(player.group(1))
 
+class MPRIS2Player(object):
 
-class MPRIS2Player():
+  def __init__(self, bus, player_name, lock):
+    self.lock = lock
+    self.name = player_name
+    self.bus = bus
+    self.initialize()
 
-  def __init__(self, bus, player_name):
-    player_object = bus.get_object('org.mpris.MediaPlayer2.'+player_name, '/org/mpris/MediaPlayer2')
+  @synchronous('lock')
+  def initialize(self):
+    player_object = self.bus.get_object('org.mpris.MediaPlayer2.'+self.name, '/org/mpris/MediaPlayer2')
     self.player = dbus.Interface(player_object, 'org.mpris.MediaPlayer2.Player')
     self.properties = dbus.Interface(self.player, 'org.freedesktop.DBus.Properties')
-    self.name = player_name
 
   def next(self):
 		self.player.Next()
@@ -63,11 +76,20 @@ class MPRIS2Player():
   def toggle_shuffle(self):
 		self["Shuffle"] = not self["Shuffle"]
 
+  def shuffle_status(self):
+    return self["Shuffle"]
+
   def toggle_repeat(self):
 		if self["LoopStatus"] == "Playlist":
 			self["LoopStatus"] = "None"
 		else:
 			self["LoopStatus"] = "Playlist"
+
+  def repeat_status(self):
+    if self["LoopStatus"] == "Playlist":
+      return 1 
+    else:
+      return 0
 
   def volume(self, new_volume=None):
 		self["Volume"] = new_volume or self["Volume"]
