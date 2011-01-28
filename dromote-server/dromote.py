@@ -33,8 +33,7 @@ def update_now_playing():
 
 def main():  
   main.something_changed = False
-  update_now_playing
-  #gobject.threads_init()
+  gobject.threads_init()
   DBusGMainLoop(set_as_default=True)
   context = gobject.MainLoop().get_context()
 
